@@ -2,31 +2,34 @@ import React from 'react';
 import { TabNavigator, StackNavigator } from 'react-navigation';
 import { Icon } from 'react-native-elements';
 
-import Feed from '../screens/Feed';
 import Settings from '../screens/Settings';
-import UserDetail from '../screens/UserDetail';
 import Me from '../screens/Me';
-import Test from '../../Login/Login'
-export const FeedStack = StackNavigator({
-  Feed: {
-    screen: Feed,
+import LoginScreen from '../screens/Login/Login';
+import SignUp from '../screens/Login/SignUp';
+import Main from '../screens/Main';
+import Splash from './splash';
+import CheckUp from '../screens/CheckUp';
+
+export const MainStack = StackNavigator({
+  Main: {
+    screen: Main,
     navigationOptions: {
-      title: 'Feed',
+      title: 'SCUT'
     },
   },
-  Details: {
-    screen: UserDetail,
-    navigationOptions: ({ navigation }) => ({
-      title: `${navigation.state.params.name.first.toUpperCase()} ${navigation.state.params.name.last.toUpperCase()}`,
-    }),
+  CheckUp: {
+    screen: CheckUp,
+    navigationOptions: {
+      title: 'Check Up'
+    },
   },
 });
 
 export const Tabs = TabNavigator({
-  Feed: {
-    screen: FeedStack,
+  Main: {
+    screen: MainStack,
     navigationOptions: {
-      tabBarLabel: 'Feed',
+      tabBarLabel: 'Main',
       tabBarIcon: ({ tintColor }) => <Icon name="list" size={35} color={tintColor} />,
     },
   },
@@ -37,13 +40,6 @@ export const Tabs = TabNavigator({
       tabBarIcon: ({ tintColor }) => <Icon name="account-circle" size={35} color={tintColor} />
     },
   },
-  Test: {
-    screen: Test,
-    navigationOptions:{
-      tabBarLabel: 'Test',
-      tabBarIcon : ({ tintColor }) => <Icon name="test" size={35} color={tintColor} />
-    }
-  }
 });
 
 export const SettingsStack = StackNavigator({
@@ -55,9 +51,38 @@ export const SettingsStack = StackNavigator({
   },
 });
 
+export const LoginStack = StackNavigator({
+  Login: { 
+    screen: LoginScreen,
+    navigationOptions: {
+        gesturesEnabled: false,
+        header: null
+    },
+  },
+  SignUp: { 
+    screen: SignUp,
+    navigationOptions: {
+      title: 'Register',
+      headerLeft: null
+    },
+  }
+},
+{
+  mode: 'modal',
+});
+
 export const Root = StackNavigator({
+  Splash: {
+    screen: Splash
+  },
   Tabs: {
     screen: Tabs,
+    navigationOptions: {
+      gesturesEnabled: false,
+    },
+  },
+  LoginStack: {
+    screen: LoginStack,
   },
   Settings: {
     screen: SettingsStack,
@@ -65,4 +90,5 @@ export const Root = StackNavigator({
 }, {
   mode: 'modal',
   headerMode: 'none',
+  gesturesEnabled: false
 });

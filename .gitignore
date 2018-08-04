@@ -32,7 +32,14 @@ local.properties
 
 # node.js
 #
-node_modules/
+!node_modules/
+
+node_modules/*
+!node_modules/@firebase
+!node_modules/firebase
+!node_modules/react-navigation
+!node_modules/react-native-elements
+
 npm-debug.log
 yarn-error.log
 

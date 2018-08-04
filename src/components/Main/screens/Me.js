@@ -1,67 +1,96 @@
 import React, { Component } from 'react';
-import { ScrollView } from 'react-native';
-import { Tile, List, ListItem, Button } from 'react-native-elements';
+import { Alert, ScrollView, View ,Image, SafeAreaView, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import { Tile, List, ListItem, Button} from 'react-native-elements';
 import { me } from '../config/data';
+import firebase from 'firebase';
 
 class Me extends Component {
-  handleSettingsPress = () => {
-    this.props.navigation.navigate('Settings');
-  };
+  componentWillMount(){
+    const firebaseConfig = {
+        apiKey: 'AIzaSyD86ea0QlrVd2MSr3Z0eHJBKgIcKtnMi5A',
+        authDomain: 'scut-project.firebaseapp.com',
+        databaseURL: "https://scut-project.firebaseio.com",
+        projectId: "scut-project",
+        storageBucket: "scut-project.appspot.com",
+        messagingSenderId: "527713997669"
+    };
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+    console.log(firebase);
+  }
 
   render() {
+    var user = firebase.auth().currentUser;
     return (
-      <ScrollView>
-        <Tile
-          imageSrc={{ uri: this.props.picture.large}}
-          featured
-          title={`${this.props.name.first.toUpperCase()} ${this.props.name.last.toUpperCase()}`}
-          caption={this.props.email}
-        />
+      <View>
+        <SafeAreaView />
 
-        <Button
-          title="Settings"
-          buttonStyle={{ marginTop: 20 }}
-          onPress={this.handleSettingsPress}
-        />
+        <View style={styles.profile}>
+          <Image
+              style={{justifyContent:'center'}}
+              source = {require('../../../images/baseline_account_circle_black_48pt_2x.png')}
+          />
+          <Text>{user.displayName}</Text>
+        </View>
+
+        <TouchableOpacity style={styles.buttonContainer} onPress={() => this.props.navigation.navigate('Settings')}>
+          <Text style={styles.buttonText}>Setting</Text>
+        </TouchableOpacity>
 
         <List>
+          <ListItem
+            title="Full Name"
+            rightTitle={user.displayName}
+            hideChevron
+          />
           <ListItem
             title="Email"
-            rightTitle={this.props.email}
-            hideChevron
-          />
-          <ListItem
-            title="Phone"
-            rightTitle={this.props.phone}
+            rightTitle={user.email}
             hideChevron
           />
         </List>
 
         <List>
-          <ListItem
-            title="Username"
-            rightTitle={this.props.login.username}
-            hideChevron
-          />
+          <TouchableOpacity onPress={()=>{Alert.alert(`User ID`,user.uid)}}>
+            <ListItem
+              title="UserId"
+              rightTitle={user.uid}
+            />
+          </TouchableOpacity>
         </List>
-
-        <List>
-          <ListItem
-            title="Birthday"
-            rightTitle={this.props.dob}
-            hideChevron
-          />
-          <ListItem
-            title="City"
-            rightTitle={this.props.location.city}
-            hideChevron
-          />
-        </List>
-      </ScrollView>
+      </View>
     );
   }
 }
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  profileImage: {
+    marginBottom: 20,
+  },
+  profile: {
+    flexGrow: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  buttonContainer: {
+    backgroundColor: 'gray',
+    padding: 10,
+    margin :20,
+    marginBottom : 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonText:{
+  	textAlign : 'center',
+    height: 20,
+    fontWeight: '900',
+    color: 'white'
+  }
+});
 Me.defaultProps = { ...me };
 
 export default Me;
